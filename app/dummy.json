@@ -1,0 +1,48 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "category": "musical",
+      "name": "Musical <The Phantom of the Opera> - Seoul",
+      "period": "23-03-25~23-11-17",
+      "file": "/musical-phantom.jpg",
+      "venue": "Charlotte Theater",
+      "ageGroup": "7 years and over",
+      "runtime": "150",
+      "price": ["VIP 190,000", "R 160,000", "S 130,000", "A 90,000"]
+    },
+    {
+      "id": 2,
+      "category": "musical",
+      "name": "Musical <MAMMA MIA!>",
+      "period": "23-03-24~23-06-25",
+      "file": "/musical-mammamia.jpg",
+      "venue": "Chungmu Arts Center, Grand Theater",
+      "ageGroup": "8 years old or above",
+      "runtime": "160",
+      "price": ["VIP 150,000", "R 130,000", "S 100,000", "A 70,000"]
+    },
+    {
+      "id": 3,
+      "category": "musical",
+      "name": "Musical 〈CHICAGO〉 25th Anniversary Tour in Korea",
+      "period": "23-05-27~23-08-06",
+      "file": "/musical-chicago.JPG",
+      "venue": "BLUE SQUARE Shinhancard Hall",
+      "ageGroup": "over 14 years old",
+      "runtime": "150",
+      "price": ["VIP 170,000", "R 105,000", "S 110,000", "A 80,000"]
+    },
+    {
+      "id": 4,
+      "category": "concert",
+      "name": "제15회 서울재즈페스티벌 2023",
+      "period": "23-05-26~23-05-28",
+      "file": "/concert-jazz.JPG",
+      "venue": "Olympic Park",
+      "ageGroup": "All",
+      "runtime": "",
+      "price": ["1 Day Pass 187,000", "3 Days Pass 420,000"]
+    }
+  ]
+}
