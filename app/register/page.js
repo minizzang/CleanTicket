@@ -15,6 +15,16 @@ export default function Register() {
   const [phoneNum, setPhoneNum] = useState("");
   const [btnActive, setBtnActive] = useState(false);
 
+  const [evTitle, setEvTitle] = useState("");
+  const [evCategory, setEvCategory] = useState("");
+  const [evDate, setEvDate] = useState("");
+  const [evTime, setEvTime] = useState("");
+  const [evVenue, setEvVenue] = useState("");
+  const [evRuntime, setEvRuntime] = useState("");
+  const [evPrice, setEvPrice] = useState("");
+
+  const [btnActiveManager, setBtnActiveManager] = useState(false);
+
   const router = useRouter();
   const tempWallet = "test";
 
@@ -48,7 +58,27 @@ export default function Register() {
   useEffect(() => {
     checkIsManager();
     setBtnActive(companyName != "" && contactName != "" && phoneNum != "");
-  }, [companyName, contactName, phoneNum]);
+    setBtnActiveManager(
+      evTitle != "" &&
+        evCategory != "" &&
+        evDate != "" &&
+        evTime != "" &&
+        evVenue != "" &&
+        evRuntime != "" &&
+        evPrice != ""
+    );
+  }, [
+    companyName,
+    contactName,
+    phoneNum,
+    evTitle,
+    evCategory,
+    evDate,
+    evTime,
+    evVenue,
+    evRuntime,
+    evPrice,
+  ]);
 
   return (
     <>
@@ -149,32 +179,40 @@ export default function Register() {
           ) : (
             <div className="flex flex-col items-center mt-10">
               <p className="font-bold text-xl mb-5">Ticket registration</p>
-              <h1 className="mb-10 text-center">
+              <h1 className="mb-5 text-center">
                 Please enter information
                 <br />
                 about the ticket you want to sell.
               </h1>
 
-              <div className="flex flex-row mb-10">
+              <div className="flex flex-row mb-3">
                 <ul className="mr-5">
-                  <li className="mb-3">Event title</li>
-                  <li className="mb-3">Category</li>
-                  <li className="mb-3">Date</li>
-                  <li className="mb-3">Time</li>
-                  <li className="mb-3">Venue</li>
-                  <li className="mb-3">Run time</li>
-                  <li className="mb-3">Price</li>
-                  <li className="mb-3">
+                  <li className="mb-3 pb-2">Event title</li>
+                  <li className="mb-3 pb-2">Category</li>
+                  <li className="mb-3 pb-2">Date</li>
+                  <li className="mb-3 pb-2">Time</li>
+                  <li className="mb-3 pb-2">Venue</li>
+                  <li className="mb-3 pb-2">Run time</li>
+                  <li className="mb-3 pb-2">Price</li>
+                  <li className="mb-3 pb-2">
                     Poster Image
                     <br />
                     (optional)
                   </li>
                 </ul>
                 <ul>
-                  <li className="mb-3">
-                    <input />
+                  <li className="mb-3 pb-2 border-b-[1px] border-black flex">
+                    <input
+                      className="grow"
+                      value={evTitle}
+                      onChange={(e) => setEvTitle(e.target.value)}
+                    />
                   </li>
-                  <li className="mb-3">
+                  <li
+                    className="mb-3 pb-2 flex"
+                    value={evCategory}
+                    onChange={(e) => setEvCategory(e.target.value)}
+                  >
                     <input
                       type="radio"
                       name="category"
@@ -228,32 +266,65 @@ export default function Register() {
                   </li>
                   <li className="mb-3 flex flex-row">
                     <p className="mr-2">from</p>
-                    <input type="date" className="mr-4" />
+                    <input
+                      type="date"
+                      className="mr-4"
+                      value={evDate}
+                      onChange={(e) => setEvDate(e.target.value)}
+                    />
                     <p className="mr-2">to</p>
                     <input type="date" />
                   </li>
-                  <li className="mb-3">
-                    <input type="time" />
+                  <li className="mb-3 pt-2">
+                    <input
+                      type="time"
+                      value={evTime}
+                      onChange={(e) => setEvTime(e.target.value)}
+                    />
                   </li>
-                  <li className="mb-3">
-                    <input />
+                  <li className="mb-3 pb-2 border-b-[1px] border-black flex">
+                    <input
+                      className="grow"
+                      value={evVenue}
+                      onChange={(e) => setEvVenue(e.target.value)}
+                    />
                   </li>
-                  <li className="mb-3 flex flex-row">
-                    <input type="number" className="mr-2" />
+                  <li className="mb-3 flex flex-row pb-2 border-b-[1px] border-black">
+                    <input
+                      type="number"
+                      className="mr-2 flex grow"
+                      value={evRuntime}
+                      onChange={(e) => setEvRuntime(e.target.value)}
+                    />
                     <p>minutes</p>
                   </li>
-                  <li className="mb-3 flex flex-row">
-                    <input type="number" className="mr-2" />
+                  <li className="mb-3 flex flex-row pb-2 border-b-[1px] border-black">
+                    <input
+                      type="number"
+                      className="mr-2 flex grow"
+                      value={evPrice}
+                      onChange={(e) => setEvPrice(e.target.value)}
+                    />
                     <p>won</p>
                   </li>
-                  <li className="mb-3">
+                  <li className="mb-3 pb-2 pt-4 flex">
                     <input type="file" accept="image/*" />
                   </li>
                 </ul>
               </div>
               <button
-                onClick={() => setIsTicketRegModalOpen(true)}
-                className="bg-main-purple text-white w-full h-12 rounded-full font-bold hover:bg-dark-purple"
+                disabled={!btnActiveManager}
+                onClick={() => {
+                  setIsTicketRegModalOpen(true);
+                  requestAsManager();
+                }}
+                className={[
+                  ` text-white w-full h-12 rounded-full font-bold ${
+                    btnActiveManager
+                      ? "bg-main-purple hover:bg-dark-purple"
+                      : "bg-gray-400"
+                  }`,
+                ]}
               >
                 Registraion Request
               </button>
