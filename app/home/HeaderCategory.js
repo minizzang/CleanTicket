@@ -4,6 +4,7 @@ import { useStateContext } from "./state-provider";
 
 export default function HeaderCategory() {
   const [category, setCategory] = useStateContext();
+  // TODO. detail page에서 category click하면 home으로 routing
 
   return (
     <div className="flex flex-row justify-center font-medium text-lg mb-10 bg-main-purple text-white w-full">
