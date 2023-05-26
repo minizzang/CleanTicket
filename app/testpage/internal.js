@@ -11,6 +11,7 @@ import {
   TicketNFTFactoryAbi,
   TicketNFTFactoryAddress,
 } from "../../lib/TicketNFTFactory";
+import pinata from "./pinata";
 
 export function Internal() {
   const { setDefaultChain } = useWeb3Modal();
@@ -71,6 +72,73 @@ export function Internal() {
     setValidUser(res.toString());
   };
 
+  // Create ticket
+  // 만들어진 컨트랙트 주소들 관리
+  const createTicketNFT = async () => {
+    // Fill it using hook
+    // ERC-721 metadata json form
+    const metadata = {
+      name: "IU", // concertName
+      description: "IU concert!!", // description
+      image: "ipfs://QmVg93vXweHfchP3TbqpLZthdX37J9u6j7UpHd5MSq3XzV", // URI of imagefile - How to get image uri?~?
+      attributes: [
+        {
+          trait_type: "concertName",
+          value: "IU",
+        },
+        {
+          trait_type: "concertDate",
+          value: "20230526",
+        },
+        {
+          trait_type: "startTime",
+          value: "1900GMT",
+        },
+        {
+          trait_type: "maxTicketCount",
+          value: 1500,
+        },
+        {
+          trait_type: "ticketPrice",
+          value: 1,
+        },
+        {
+          trait_type: "category",
+          value: "Music",
+        },
+        {
+          trait_type: "location",
+          value: "KAIST",
+        },
+      ],
+    };
+
+    // Optional pinata metadata
+    const options = {
+      pinataMetadata: {
+        name: metadata.name,
+      },
+      pinataOptions: {
+        cidVersion: 0,
+      },
+    };
+
+    const pinataResponse = await pinata.pinJSONToIPFS(metadata, options);
+    const tokenURI = `ipfs://${pinataResponse.IpfsHash}`;
+    const res = await writeContract({
+      address: TicketNFTFactoryAddress,
+      abi: TicketNFTFactoryAbi,
+      functionName: "createTicketNFT",
+      args: [
+        metadata.name,
+        metadata.attributes[3].value,
+        metadata.attributes[4].value,
+        tokenURI,
+      ],
+    });
+    alert(`successfully created ${metadata.name} ticketNFT contract!`);
+  };
+
   // Get whole concert info
   const getConcertInfo = async () => {
     if (!isConnected) return;
@@ -79,24 +147,21 @@ export function Internal() {
       abi: TicketNFTFactoryAbi,
       functionName: "getConcertInfo",
     });
-    setInfo(res.toString());
-  };
-
-  // Create ticket
-  // 만들어진 컨트랙트 주소들 관리
-  const createTicketNFT = async () => {
-    const res = await writeContract({
-      address: TicketNFTFactoryAddress,
-      abi: TicketNFTFactoryAbi,
-      functionName: "createTicketNFT",
-      args: ["아이유", 20230525, 1000, 15],
-    });
-    alert(`successfully created ticketNFT contract in address ${res}`);
+    // res is object array : contains ticketNFTaddress, owner of it, finish(bool), tokenURI
+    for (var i = 0; i < res.length; i++) {
+      var obj = res[i];
+      // retrieve data from ipfs
+      const ooo = await fetch(
+        obj.tokenURI.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/")
+      ).then((res) => res.json());
+      console.log(obj.ticketNFTAddress, obj.contractOwner, ooo, obj.finish);
+    }
+    // setInfo(JSON.stringify(ooo));
   };
 
   // Test codes for TicketNFT contract
   // Address for above ticketNFT contract
-  const ticketNFTaddress = "0x6C3D984f137B480667Cd566a9738aE48E2adA6B3";
+  const ticketNFTaddress = "0x0c1E677813264b3742F97BDE357A47AAcf242E5a";
 
   // Setting concert finish value true
   const concertOver = async () => {
