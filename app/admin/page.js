@@ -1,13 +1,24 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+import { writeContract } from "@wagmi/core";
+import {
+  TicketNFTFactoryAbi,
+  TicketNFTFactoryAddress,
+} from "../../lib/TicketNFTFactory";
 
 export default function Admin() {
+  // For web3
+  const { isConnected, address } = useAccount(); // TODO. 관리자 wallet이면 OK하는 로직
+  //
+
   const [isAdmin, setIsAdmin] = useState(true);
   const [waitingList, setWatingList] = useState([]);
   const [managerList, setManagerList] = useState([]);
   const [changed, setChanged] = useState(false);
 
+  // Get all manager list from DB (waiting & accepted)
   const getManagerList = async () => {
     await axios.get("/admin/route").then((res) => {
       const list = res.data.managerList;
@@ -18,15 +29,38 @@ export default function Admin() {
     });
   };
 
+  // Add user whiteList (Contract & DB)
   const acceptManager = async (wallet) => {
-    await axios.put(`/admin/${wallet}`).then((res) => {
+    await writeContract({
+      address: TicketNFTFactoryAddress,
+      abi: TicketNFTFactoryAbi,
+      functionName: "addWhiteList",
+      args: [wallet],
+    }).then(async (res) => {
+      await axios.put(`/admin/${wallet}`).then((res) => {
+        setChanged(!changed);
+      });
+    });
+  };
+
+  // Reject manager request (DB)
+  const rejectManager = async (wallet) => {
+    await axios.delete(`/admin/${wallet}`).then((res) => {
       setChanged(!changed);
     });
   };
 
-  const rejectManager = async (wallet) => {
-    await axios.delete(`/admin/${wallet}`).then((res) => {
-      setChanged(!changed);
+  // Remove user from whiteList (Contract & DB)
+  const removeManager = async (wallet) => {
+    await writeContract({
+      address: TicketNFTFactoryAddress,
+      abi: TicketNFTFactoryAbi,
+      functionName: "removeWhiteList",
+      args: [wallet],
+    }).then(async (res) => {
+      await axios.delete(`/admin/${wallet}`).then((res) => {
+        setChanged(!changed);
+      });
     });
   };
 
@@ -111,7 +145,7 @@ export default function Admin() {
                 <div className="flex flex-row w-full items-end justify-between h-[25%]">
                   <button
                     className=" bg-red-300 w-full h-9 rounded-full font-medium text-white"
-                    onClick={() => rejectManager(data.wallet)}
+                    onClick={() => removeManager(data.wallet)}
                   >
                     Delete
                   </button>

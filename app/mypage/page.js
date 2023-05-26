@@ -1,10 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+import { readContract } from "@wagmi/core";
+import {
+  TicketNFTFactoryAbi,
+  TicketNFTFactoryAddress,
+} from "../../lib/TicketNFTFactory";
 
 export default function MyPage() {
-  const [isTicketManager, setIsTicketManager] = useState(true);
+  const { isConnected, address } = useAccount();
+
+  const [isTicketManager, setIsTicketManager] = useState(false);
   const [hasTicket, setHasTicket] = useState(true);
+
+  // Check is user in whitelist or not
+  // TODO. user에 대한 정보를 global하게 뿌려서 로딩시간 단축?
+  const checkIsManager = async () => {
+    if (isConnected) {
+      await readContract({
+        address: TicketNFTFactoryAddress,
+        abi: TicketNFTFactoryAbi,
+        functionName: "checkValidity",
+        args: [address],
+      }).then((res) => {
+        setIsTicketManager(res);
+      });
+    }
+  };
+
+  useEffect(() => {
+    checkIsManager();
+  });
 
   return (
     <div className="flex flex-col items-center max-w-6xl w-full px-28 mx-auto py-5">

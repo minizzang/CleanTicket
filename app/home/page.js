@@ -4,11 +4,32 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import dummy from "../dummy.json";
 import { useStateContext } from "./state-provider";
+import { readContract } from "@wagmi/core";
+import {
+  TicketNFTFactoryAbi,
+  TicketNFTFactoryAddress,
+} from "../../lib/TicketNFTFactory";
+import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
   const [category, setCategory] = useStateContext();
   const data = dummy.data.filter((d) => d.category == category);
+
+  // Get whole concert info
+  const getConcertInfo = async () => {
+    // if (!isConnected) return;
+    const res = await readContract({
+      address: TicketNFTFactoryAddress,
+      abi: TicketNFTFactoryAbi,
+      functionName: "getConcertInfo",
+    });
+    console.log("getConcertInfo", res);
+  };
+
+  useEffect(() => {
+    getConcertInfo();
+  });
 
   return (
     <div className="grid grid-cols-3 h-full ">

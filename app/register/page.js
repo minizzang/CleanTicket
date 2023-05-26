@@ -4,8 +4,18 @@ import ReactModal from "react-modal";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useAccount, useWalletClient, useBalance } from "wagmi";
+import { writeContract } from "@wagmi/core";
+import {
+  TicketNFTFactoryAbi,
+  TicketNFTFactoryAddress,
+} from "../../lib/TicketNFTFactory";
 
 export default function Register() {
+  // For web3
+  const { isConnected, address } = useAccount();
+
+  //
   const [isManagerRegModalOpen, setIsManagerRegModalOpen] = useState(false);
   const [isTicketRegModalOpen, setIsTicketRegModalOpen] = useState(false);
   const [isTicketManager, setIsTicketManager] = useState(undefined);
@@ -20,17 +30,19 @@ export default function Register() {
   const [evDate, setEvDate] = useState("");
   const [evTime, setEvTime] = useState("");
   const [evVenue, setEvVenue] = useState("");
-  const [evRuntime, setEvRuntime] = useState("");
-  const [evPrice, setEvPrice] = useState("");
+  const [evAmount, setEvAmount] = useState(1);
+  const [evPrice, setEvPrice] = useState(0);
 
   const [btnActiveManager, setBtnActiveManager] = useState(false);
 
   const router = useRouter();
-  const tempWallet = "test";
 
   const checkIsManager = async () => {
-    await axios.get(`/register/${tempWallet}`).then((res) => {
-      if (res.data.checkIsManager.isAccepted) {
+    await axios.get(`/register/${address}`).then((res) => {
+      if (
+        res.data.checkIsManager != null &&
+        res.data.checkIsManager.isAccepted
+      ) {
         setIsTicketManager(true);
       } else {
         setIsTicketManager(false);
@@ -40,7 +52,7 @@ export default function Register() {
 
   const requestAsManager = async () => {
     const data = {
-      wallet: Math.random().toString(), // TODO. wallet 주소 자동으로 받는 법
+      wallet: address,
       name: contactName,
       company: companyName,
       phone: phoneNum,
@@ -55,6 +67,18 @@ export default function Register() {
       .catch((err) => console.log("errororo")); // TODO. 이미 등록된 주소면 alert
   };
 
+  // Create TicketNFT contract
+  const requestTicketCreation = async () => {
+    await writeContract({
+      address: TicketNFTFactoryAddress,
+      abi: TicketNFTFactoryAbi,
+      functionName: "createTicketNFT",
+      args: [evTitle, 20230525, evAmount, evPrice],
+    }).then(() => {
+      setIsTicketRegModalOpen(true);
+    });
+  };
+
   useEffect(() => {
     checkIsManager();
     setBtnActive(companyName != "" && contactName != "" && phoneNum != "");
@@ -64,8 +88,10 @@ export default function Register() {
         evDate != "" &&
         evTime != "" &&
         evVenue != "" &&
-        evRuntime != "" &&
-        evPrice != ""
+        evAmount != "" &&
+        evPrice != "" &&
+        evAmount >= 1 &&
+        evPrice >= 0
     );
   }, [
     companyName,
@@ -76,7 +102,7 @@ export default function Register() {
     evDate,
     evTime,
     evVenue,
-    evRuntime,
+    evAmount,
     evPrice,
   ]);
 
@@ -192,7 +218,7 @@ export default function Register() {
                   <li className="mb-3 pb-2">Date</li>
                   <li className="mb-3 pb-2">Time</li>
                   <li className="mb-3 pb-2">Venue</li>
-                  <li className="mb-3 pb-2">Run time</li>
+                  <li className="mb-3 pb-2">Ticket Amounts</li>
                   <li className="mb-3 pb-2">Price</li>
                   <li className="mb-3 pb-2">
                     Poster Image
@@ -264,22 +290,24 @@ export default function Register() {
                       Exhibitions
                     </label>
                   </li>
-                  <li className="mb-3 flex flex-row">
-                    <p className="mr-2">from</p>
+                  <li className="mb-3">
                     <input
                       type="date"
-                      className="mr-4"
                       value={evDate}
-                      onChange={(e) => setEvDate(e.target.value)}
+                      onChange={(e) => {
+                        setEvDate(e.target.value);
+                        console.log(evDate.type);
+                      }}
                     />
-                    <p className="mr-2">to</p>
-                    <input type="date" />
                   </li>
                   <li className="mb-3 pt-2">
                     <input
                       type="time"
                       value={evTime}
-                      onChange={(e) => setEvTime(e.target.value)}
+                      onChange={(e) => {
+                        setEvTime(e.target.value);
+                        console.log(evTime);
+                      }}
                     />
                   </li>
                   <li className="mb-3 pb-2 border-b-[1px] border-black flex">
@@ -292,31 +320,36 @@ export default function Register() {
                   <li className="mb-3 flex flex-row pb-2 border-b-[1px] border-black">
                     <input
                       type="number"
-                      className="mr-2 flex grow"
-                      value={evRuntime}
-                      onChange={(e) => setEvRuntime(e.target.value)}
+                      className="mr-2 flex grow text-right"
+                      value={evAmount}
+                      onChange={(e) => setEvAmount(e.target.value)}
+                      min={1}
                     />
-                    <p>minutes</p>
+                    <p>tickets</p>
                   </li>
                   <li className="mb-3 flex flex-row pb-2 border-b-[1px] border-black">
                     <input
                       type="number"
-                      className="mr-2 flex grow"
+                      className="mr-2 flex grow text-right"
                       value={evPrice}
                       onChange={(e) => setEvPrice(e.target.value)}
+                      min={0}
                     />
-                    <p>won</p>
+                    <p> =&gt; {evPrice / 1000} eth</p>
                   </li>
                   <li className="mb-3 pb-2 pt-4 flex">
-                    <input type="file" accept="image/*" />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => console.log(e.currentTarget.files)}
+                    />
                   </li>
                 </ul>
               </div>
               <button
                 disabled={!btnActiveManager}
                 onClick={() => {
-                  setIsTicketRegModalOpen(true);
-                  requestAsManager();
+                  requestTicketCreation();
                 }}
                 className={[
                   ` text-white w-full h-12 rounded-full font-bold ${
@@ -326,7 +359,7 @@ export default function Register() {
                   }`,
                 ]}
               >
-                Registraion Request
+                Registration Request
               </button>
 
               <ReactModal

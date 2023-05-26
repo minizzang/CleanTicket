@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { Web3Button } from "@web3modal/react";
 
 export default function Header() {
   const router = useRouter();
@@ -28,6 +29,7 @@ export default function Header() {
           <p className="mr-8">MyPage</p>
         </Link>
       </div>
+      <Web3Button />
     </div>
   );
 }
