@@ -104,7 +104,7 @@ export function Internal() {
         },
         {
           trait_type: "category",
-          value: "Music",
+          value: "Musical",
         },
         {
           trait_type: "location",
@@ -161,7 +161,7 @@ export function Internal() {
 
   // Test codes for TicketNFT contract
   // Address for above ticketNFT contract
-  const ticketNFTaddress = "0x0c1E677813264b3742F97BDE357A47AAcf242E5a";
+  const ticketNFTaddress = "0x28B01F527dC9A482aF47fDB990895a61ba361bAA";
 
   // Setting concert finish value true
   const concertOver = async () => {

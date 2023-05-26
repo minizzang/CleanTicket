@@ -10,6 +10,7 @@ import {
   TicketNFTFactoryAbi,
   TicketNFTFactoryAddress,
 } from "../../lib/TicketNFTFactory";
+import pinata from "../pinata";
 
 export default function Register() {
   // For web3
@@ -69,11 +70,66 @@ export default function Register() {
 
   // Create TicketNFT contract
   const requestTicketCreation = async () => {
+    // ERC-721 metadata json form
+    const metadata = {
+      name: evTitle, // concertName
+      description: evTitle, // description
+      image:
+        "https://search.pstatic.net/common/?src=http%3A%2F%2Fshop1.phinf.naver.net%2F20221019_234%2F1666174709893NcVXt_JPEG%2F67310605598159562_1465642507.jpg&type=sc960_832", // URI of imagefile - How to get image uri?~?
+      attributes: [
+        {
+          trait_type: "concertName",
+          value: evTitle,
+        },
+        {
+          trait_type: "concertDate",
+          value: evDate,
+        },
+        {
+          trait_type: "startTime",
+          value: evTime,
+        },
+        {
+          trait_type: "maxTicketCount",
+          value: evAmount,
+        },
+        {
+          trait_type: "ticketPrice",
+          value: parseInt(evPrice),
+        },
+        {
+          trait_type: "category",
+          value: evCategory,
+        },
+        {
+          trait_type: "location",
+          value: evVenue,
+        },
+      ],
+    };
+
+    // Optional pinata metadata
+    const options = {
+      pinataMetadata: {
+        name: metadata.name,
+      },
+      pinataOptions: {
+        cidVersion: 0,
+      },
+    };
+
+    const pinataResponse = await pinata.pinJSONToIPFS(metadata, options);
+    const tokenURI = `ipfs://${pinataResponse.IpfsHash}`;
     await writeContract({
       address: TicketNFTFactoryAddress,
       abi: TicketNFTFactoryAbi,
       functionName: "createTicketNFT",
-      args: [evTitle, 20230525, evAmount, evPrice],
+      args: [
+        metadata.name,
+        metadata.attributes[3].value,
+        metadata.attributes[4].value,
+        tokenURI,
+      ],
     }).then(() => {
       setIsTicketRegModalOpen(true);
     });

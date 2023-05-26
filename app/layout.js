@@ -11,9 +11,9 @@ import { Web3Modal } from "@web3modal/react";
 
 import Header from "./Header";
 import "./globals.css";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 const chains = [sepolia];
 const projectId = "8e1dc946975085aad108936266fc9da5";
