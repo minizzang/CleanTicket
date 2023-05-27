@@ -53,8 +53,11 @@ export default function Detail({ params }) {
             />
           </div>
           <div className="flex flex-col ml-10 mt-5 w-full justify-around">
-            <p className="text-2xl mb-10">{data.name}</p>
+            <p className="text-2xl mb-10 font-bold">{data.name}</p>
             <ul>
+              <li className="flex flex-row font-bold text-base mb-3">
+                Category :&nbsp;<p className="font-medium">{data.category}</p>
+              </li>
               <li className="flex flex-row font-bold text-base mb-3">
                 Date/Time :&nbsp;
                 <p className="font-medium">
@@ -65,8 +68,10 @@ export default function Detail({ params }) {
                 Venue :&nbsp;<p className="font-medium">{data.venue}</p>
               </li>
               <li className="flex flex-row font-bold text-base mb-3">
-                Max Ticket Amounts :&nbsp;
-                <p className="font-medium">{data.maxTicketCount}</p>
+                Remaining Tickets :&nbsp;
+                <p className="font-medium">
+                  {data.maxTicketCount - data.soldCount}/{data.maxTicketCount}
+                </p>
               </li>
               <li className="flex flex-row font-bold text-base mb-3">
                 Price :&nbsp;
