@@ -80,7 +80,7 @@ export function Internal() {
     const metadata = {
       name: "IU", // concertName
       description: "IU concert!!", // description
-      image: "ipfs://QmVg93vXweHfchP3TbqpLZthdX37J9u6j7UpHd5MSq3XzV", // URI of imagefile - How to get image uri?~?
+      image: "https://gateway.pinata.cloud/ipfs/QmSHbWvGk98cPCjkuws4aQsp6KJMgTGSuh9En8nWSMMXBY", // Any link to image
       attributes: [
         {
           trait_type: "concertName",
@@ -124,7 +124,7 @@ export function Internal() {
     };
 
     const pinataResponse = await pinata.pinJSONToIPFS(metadata, options);
-    const tokenURI = `ipfs://${pinataResponse.IpfsHash}`;
+    const tokenURI = `https://gateway.pinata.cloud/ipfs/${pinataResponse.IpfsHash}`;
     const res = await writeContract({
       address: TicketNFTFactoryAddress,
       abi: TicketNFTFactoryAbi,
@@ -151,9 +151,7 @@ export function Internal() {
     for (var i = 0; i < res.length; i++) {
       var obj = res[i];
       // retrieve data from ipfs
-      const ooo = await fetch(
-        obj.tokenURI.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/")
-      ).then((res) => res.json());
+      const ooo = await fetch(obj.tokenURI).then((res) => res.json());
       console.log(obj.ticketNFTAddress, obj.contractOwner, ooo, obj.finish);
     }
     // setInfo(JSON.stringify(ooo));
@@ -161,7 +159,7 @@ export function Internal() {
 
   // Test codes for TicketNFT contract
   // Address for above ticketNFT contract
-  const ticketNFTaddress = "0x28B01F527dC9A482aF47fDB990895a61ba361bAA";
+  const ticketNFTaddress = "0x75ca5B79c0C5122CCE6f04D29271B377bdd851F0";
 
   // Setting concert finish value true
   const concertOver = async () => {
