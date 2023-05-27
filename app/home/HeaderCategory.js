@@ -1,15 +1,27 @@
 "use client";
 
+import { usePathname, useRouter } from "next/navigation";
 import { useStateContext } from "./state-provider";
 
 export default function HeaderCategory() {
   const [category, setCategory] = useStateContext();
-  // TODO. detail page에서 category click하면 home으로 routing
+  const pathname = usePathname();
+  const router = useRouter();
+
+  // detail page에서 category click하면 home으로 routing
+  function routeHome() {
+    if (pathname != "/home") {
+      router.push("/home");
+    }
+  }
 
   return (
     <div className="flex flex-row justify-center font-medium text-lg mb-10 bg-main-purple text-white w-full">
       <p
-        onClick={() => setCategory("musical")}
+        onClick={() => {
+          setCategory("musical");
+          routeHome();
+        }}
         className={[
           `flex justify-center w-1/7 w-[13%] h-full p-3 cursor-pointer hover:border-t-light-purple hover:border-t-[6px] ${
             category == "musical" ? " border-t-light-purple border-t-[6px]" : ""
@@ -19,7 +31,10 @@ export default function HeaderCategory() {
         Musical
       </p>
       <p
-        onClick={() => setCategory("concert")}
+        onClick={() => {
+          setCategory("concert");
+          routeHome();
+        }}
         className={[
           `flex justify-center w-1/7 w-[13%] h-full p-3 cursor-pointer hover:border-t-light-purple hover:border-t-[6px] ${
             category == "concert" ? " border-t-light-purple border-t-[6px]" : ""
@@ -29,7 +44,10 @@ export default function HeaderCategory() {
         Concert
       </p>
       <p
-        onClick={() => setCategory("play")}
+        onClick={() => {
+          setCategory("play");
+          routeHome();
+        }}
         className={[
           `flex justify-center w-1/7 w-[13%] h-full p-3 cursor-pointer hover:border-t-light-purple hover:border-t-[6px] ${
             category == "play" ? " border-t-light-purple border-t-[6px]" : ""
@@ -39,7 +57,10 @@ export default function HeaderCategory() {
         Play
       </p>
       <p
-        onClick={() => setCategory("sports")}
+        onClick={() => {
+          setCategory("sports");
+          routeHome();
+        }}
         className={[
           `flex justify-center w-1/7 w-[13%] h-full p-3 cursor-pointer hover:border-t-light-purple hover:border-t-[6px] ${
             category == "sports" ? " border-t-light-purple border-t-[6px]" : ""
@@ -49,7 +70,10 @@ export default function HeaderCategory() {
         Sports
       </p>
       <p
-        onClick={() => setCategory("exhibitions")}
+        onClick={() => {
+          setCategory("exhibitions");
+          routeHome();
+        }}
         className={[
           `flex justify-center w-1/7 w-[13%] h-full p-3 cursor-pointer hover:border-t-light-purple hover:border-t-[6px] ${
             category == "exhibitions"

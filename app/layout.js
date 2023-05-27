@@ -12,6 +12,7 @@ import { Web3Modal } from "@web3modal/react";
 
 import Header from "./Header";
 import "./globals.css";
+import { useEffect, useState } from "react";
 // import { Inter } from "next/font/google";
 
 // const inter = Inter({ subsets: ["latin"] });
@@ -35,25 +36,32 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   const { isConnected } = useAccount();
+  const [element, setElement] = useState(<></>);
+
+  useEffect(() => {
+    if (isConnected) {
+      setElement(children);
+    } else {
+      const elem = (
+        <div className="flex items-center h-96">
+          <p className=" text-center text-xl font-bold text-gray-300">
+            Please connect your wallet
+            <br />
+            using the top button &apos;Connect Wallet&apos;
+          </p>
+        </div>
+      );
+      setElement(elem);
+    }
+  }, [isConnected]);
+
   return (
     <html lang="en">
-      <body className="flex min-h-screen h-full flex-col items-center self-center font-notoSans pb-14">
+      <body className="flex min-h-screen h-full flex-col items-center self-center font-notoSans pb-14 ">
         <WagmiConfig config={wagmiConfig}>
           <Header />
           <div className="border-b-2 border-gray-200 w-full"></div>
-          {/* TODO. 밑에 에러 수정 */}
-          {/* {isConnected ? (
-            children
-          ) : (
-            <div className="flex items-center h-96">
-              <p className=" text-center text-xl font-bold text-gray-300">
-                Please connect your wallet
-                <br />
-                using the top button &apos;Connect Wallet&apos;
-              </p>
-            </div>
-          )} */}
-          {children}
+          {element}
         </WagmiConfig>
         <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
       </body>

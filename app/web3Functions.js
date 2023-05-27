@@ -22,6 +22,16 @@ export async function wGetOneConcertInfo(contractAddr) {
   return allConcerts.find((data) => data.addr == contractAddr);
 }
 
+// Get number of sold tickets
+export async function wGetSoldCount(contractAddr) {
+  const res = await readContract({
+    address: contractAddr,
+    abi: TicketNFTAbi,
+    functionName: "getUserInfo",
+  });
+  return res.length;
+}
+
 // For manager, get hosting concerts
 export async function wGetMyConcertInfo(userAddr) {
   const allConcerts = await wGetAllConcertInfo();
@@ -61,6 +71,7 @@ export async function wConvertConcerObj(res) {
       obj.tokenURI.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/"),
       { method: "GET", mode: "cors" }
     ).then((res) => res.json());
+    const soldCount = await wGetSoldCount(obj.ticketNFTAddress);
 
     let event = {
       addr: obj.ticketNFTAddress,
@@ -71,6 +82,7 @@ export async function wConvertConcerObj(res) {
       time: data.attributes[2].value,
       maxTicketCount: data.attributes[3].value,
       price: data.attributes[4].value,
+      soldCount,
       category: data.attributes[5].value,
       venue: data.attributes[6].value,
       image: data.image,

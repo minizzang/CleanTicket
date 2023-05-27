@@ -13,10 +13,8 @@ import {
 import pinata from "../pinata";
 
 export default function Register() {
-  // For web3
   const { isConnected, address } = useAccount();
 
-  //
   const [isManagerRegModalOpen, setIsManagerRegModalOpen] = useState(false);
   const [isTicketRegModalOpen, setIsTicketRegModalOpen] = useState(false);
   const [isTicketManager, setIsTicketManager] = useState(undefined);
@@ -33,6 +31,7 @@ export default function Register() {
   const [evVenue, setEvVenue] = useState("");
   const [evAmount, setEvAmount] = useState(1);
   const [evPrice, setEvPrice] = useState(0);
+  const [evImageURL, setEvImageURL] = useState("");
 
   const [btnActiveManager, setBtnActiveManager] = useState(false);
 
@@ -74,8 +73,7 @@ export default function Register() {
     const metadata = {
       name: evTitle, // concertName
       description: evTitle, // description
-      image:
-        "https://search.pstatic.net/common/?src=http%3A%2F%2Fshop1.phinf.naver.net%2F20221019_234%2F1666174709893NcVXt_JPEG%2F67310605598159562_1465642507.jpg&type=sc960_832", // URI of imagefile - How to get image uri?~?
+      image: evImageURL, // URI of imagefile - How to get image uri?~?
       attributes: [
         {
           trait_type: "concertName",
@@ -119,7 +117,7 @@ export default function Register() {
     };
 
     const pinataResponse = await pinata.pinJSONToIPFS(metadata, options);
-    const tokenURI = `ipfs://${pinataResponse.IpfsHash}`;
+    const tokenURI = `https://gateway.pinata.cloud/ipfs/${pinataResponse.IpfsHash}`;
     await writeContract({
       address: TicketNFTFactoryAddress,
       abi: TicketNFTFactoryAbi,
@@ -279,7 +277,7 @@ export default function Register() {
                   <li className="mb-3 pb-2">
                     Poster Image
                     <br />
-                    (optional)
+                    (optional, url)
                   </li>
                 </ul>
                 <ul>
@@ -393,11 +391,11 @@ export default function Register() {
                     />
                     <p> =&gt; {evPrice / 1000} eth</p>
                   </li>
-                  <li className="mb-3 pb-2 pt-4 flex">
+                  <li className="mb-3 pb-2 pt-4 flex border-b-[1px] border-black">
                     <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => console.log(e.currentTarget.files)}
+                      className="mr-2 flex grow"
+                      type="url"
+                      onChange={(e) => setEvImageURL(e.target.value)}
                     />
                   </li>
                 </ul>

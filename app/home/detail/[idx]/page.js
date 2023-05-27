@@ -1,14 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import Image from "next/image";
-import dummy from "../../../dummy.json";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { useAccount } from "wagmi";
-import { readContract, writeContract } from "@wagmi/core";
-import {
-  TicketNFTFactoryAbi,
-  TicketNFTFactoryAddress,
-} from "../../../../lib/TicketNFTFactory";
+import { writeContract } from "@wagmi/core";
 import { TicketNFTAbi } from "@/lib/TicketNFT";
 import { parseEther } from "viem";
 
@@ -17,7 +12,6 @@ import { wGetOneConcertInfo } from "@/app/web3Functions";
 
 export default function Detail({ params }) {
   const { address } = useAccount();
-  // const data = dummy.data.find((d) => d.id == params.idx);
   const [data, setData] = useState("");
 
   const getConcertInfo = async () => {
@@ -27,14 +21,20 @@ export default function Detail({ params }) {
   };
 
   const buyTicket = async () => {
-    const res = await writeContract({
+    await writeContract({
       address: params.idx,
       abi: TicketNFTAbi,
       functionName: "sellTicket",
       args: [address],
-      value: parseEther(data.price / 1000).toString(),
-    });
-    alert(`successfully mint and transfer ticket NFT!`);
+      value: parseEther((data.price / 1000).toString()).toString(),
+    })
+      .then(() => {
+        alert(`successfully mint and transfer ticket NFT!`);
+      })
+      .catch((res) => {
+        console.log(res);
+        alert(res);
+      });
   };
 
   useEffect(() => {
@@ -44,32 +44,33 @@ export default function Detail({ params }) {
   return (
     <>
       {data ? (
-        <div className="flex flex-row">
-          <Image
-            src={data.file}
-            width={250}
-            height={450}
-            alt="poster"
-            style={{ objectFit: "cover" }}
-          />
-          <div className="flex flex-col ml-10 mt-5 w-full">
+        <div className="flex flex-row w-full h-full">
+          <div style={{ width: "35vw", height: "55vh" }}>
+            <img
+              src={data.image}
+              alt="poster"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          </div>
+          <div className="flex flex-col ml-10 mt-5 w-full justify-around">
             <p className="text-2xl mb-10">{data.name}</p>
             <ul>
-              <li className="flex flex-row font-bold text-base mb-2">
+              <li className="flex flex-row font-bold text-base mb-3">
                 Date/Time :&nbsp;
                 <p className="font-medium">
                   {data.date} {data.time}
                 </p>
               </li>
-              <li className="flex flex-row font-bold text-base mb-2">
+              <li className="flex flex-row font-bold text-base mb-3">
                 Venue :&nbsp;<p className="font-medium">{data.venue}</p>
               </li>
-              <li className="flex flex-row font-bold text-base mb-2">
+              <li className="flex flex-row font-bold text-base mb-3">
                 Max Ticket Amounts :&nbsp;
                 <p className="font-medium">{data.maxTicketCount}</p>
               </li>
-              <li className="flex flex-row font-bold text-base mb-2">
-                Price :&nbsp;<p className="font-medium">{data.price}won</p>
+              <li className="flex flex-row font-bold text-base mb-3">
+                Price :&nbsp;
+                <p className="font-medium">{data.price / 1000}eth</p>
               </li>
             </ul>
             <button
@@ -82,7 +83,7 @@ export default function Detail({ params }) {
           </div>
         </div>
       ) : (
-        <div>hi</div>
+        <div></div>
       )}
     </>
   );

@@ -60,19 +60,18 @@ export default function MyPage() {
               key={elem.addr}
               className="bg-gray-50 rounded-xl m-5 p-3 drop-shadow-md w-5/6 h-40 flex flex-col items-center justify-center"
             >
-              <p className="font-bold text-xl">{elem.name}</p>
+              <p className="font-bold text-xl mb-2">{elem.name}</p>
 
               <ol className=" list-disc">
                 <li>
                   date/time: {elem.date} {elem.time}
                 </li>
                 <li>concert price: {elem.price}eth</li>
-                <li>remaining tickets: 4/{elem.maxTicketCount}</li>
+                <li>
+                  remaining tickets: {elem.maxTicketCount - elem.soldCount}/
+                  {elem.maxTicketCount}
+                </li>
               </ol>
-
-              <button className="bg-yellow-200 rounded-lg text-lg">
-                Stop selling
-              </button>
             </div>
           ))}
         </>
@@ -81,13 +80,13 @@ export default function MyPage() {
       )}
 
       <p className="font-bold text-xl self-start">My Tickets</p>
-      {true ? (
+      {ticketList.length != 0 ? (
         ticketList.map((elem) => (
           <div
             key={elem.addr}
             className="bg-gray-50 rounded-xl m-5 p-3 drop-shadow-md w-5/6 h-40 flex flex-col items-center justify-center"
           >
-            <p className="font-bold text-xl">{elem.name}</p>
+            <p className="font-bold text-xl mb-2">{elem.name}</p>
 
             <ol className=" list-disc">
               <li>contract address: {elem.addr}</li>

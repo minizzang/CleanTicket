@@ -1,60 +1,69 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import dummy from "../dummy.json";
 import { useStateContext } from "./state-provider";
-import { readContract } from "@wagmi/core";
-import {
-  TicketNFTFactoryAbi,
-  TicketNFTFactoryAddress,
-} from "../../lib/TicketNFTFactory";
+
 import { useEffect, useState } from "react";
 import { wGetAllConcertInfo } from "../web3Functions";
 
 export default function Home() {
   const router = useRouter();
   const [category, setCategory] = useStateContext();
-  const data = dummy.data.filter((d) => d.category == category);
   const [eventList, setEventList] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Get whole concert info
   const getConcertInfo = async () => {
     // if (!isConnected) return;
+    setIsLoaded(false);
     await wGetAllConcertInfo().then(async (res) => {
       const filtered = res.filter((d) => d.category == category);
       setEventList(filtered);
+      setIsLoaded(true);
     });
   };
 
   useEffect(() => {
     setEventList([]);
     getConcertInfo();
-  }, []);
+  }, [category]);
 
-  return (
+  return isLoaded && eventList.length == 0 ? (
+    <p className="text-gray-300 font-black text-2xl py-20 text-center w-full">
+      There are no {category} on sale
+    </p>
+  ) : (
     <div className="grid grid-cols-3 h-full ">
       {eventList.map((data) => (
         <div
-          onClick={() => router.push(`/home/detail/${data.addr}`)}
           key={data.addr}
-          className="flex flex-col items-center overflow-hidden bg-gray-50 rounded-xl m-5 p-3 mt-0 drop-shadow-md hover:-translate-y-1 hover:scale-105 transition cursor-pointer"
+          onClick={() => {
+            if (data.soldCount < data.maxTicketCount) {
+              router.push(`/home/detail/${data.addr}`);
+            }
+          }}
+          className="flex flex-col items-center overflow-hidden bg-gray-50 rounded-xl m-5  mt-0 drop-shadow-md hover:-translate-y-1 hover:scale-105 transition cursor-pointer"
         >
-          <div className="relative w-48 h-64">
-            {/* <Image
-              // src={data.image}
-              src="https://dimg.donga.com/wps/NEWS/IMAGE/2019/12/31/99024137.2.jpg"
+          <div className="relative w-48 h-64 grid mt-3">
+            <img
+              src={data.image}
               alt="thumbnail"
-              fill={true}
-              style={{ objectFit: "cover" }}
-            /> */}
-            <img src="https://i.namu.wiki/i/slmFMXb1Fchs2zN0ZGOzqfuPDvhRS-H9eBp7Gp613-DNKi6i6Ct7eFkTUpauqv5HAYR97mrNqrvvcCDEyBdL_g.webp" />
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
           </div>
 
           <p className="text-sm font-regular mt-3 w-full text-center">
             {data.name}
           </p>
-          <p className="text-xs font-light mt-1">{data.date}</p>
+          <p className="text-xs font-light mt-1 mb-3">{data.date}</p>
+          {data.soldCount == data.maxTicketCount ? (
+            <div className="flex absolute bg-gray-200 opacity-60 w-full h-full items-center justify-center">
+              <img src="/soldout.png" alt="soldout" />
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       ))}
     </div>

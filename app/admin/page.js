@@ -9,9 +9,7 @@ import {
 } from "../../lib/TicketNFTFactory";
 
 export default function Admin() {
-  // For web3
   const { isConnected, address } = useAccount(); // TODO. 관리자 wallet이면 OK하는 로직
-  //
 
   const [isAdmin, setIsAdmin] = useState(true);
   const [waitingList, setWatingList] = useState([]);
@@ -75,13 +73,13 @@ export default function Admin() {
           <p className="font-bold text-xl self-start">
             Ticket Manager Waiting List
           </p>
-          <div className="flex flex-row w-full h-64 py-4 overflow-x-scroll">
+          <div className="flex flex-row w-full h-64 py-4 overflow-x-scroll scrollbar-hide">
             {waitingList.map((data) => (
               <div
                 key={data.wallet}
                 className="flex flex-col bg-gray-50 rounded-xl p-3 drop-shadow-md max-w-[10rem] min-w-[10rem] h-full mx-3"
               >
-                <div className="h-[75%] overflow-scroll whitespace-break-spaces">
+                <div className="h-[75%] overflow-scroll whitespace-break-spaces scrollbar-hide">
                   <div className="flex flex-col items-center mb-2">
                     <p className="text-xs">Name</p>
                     <p className="text-sm font-semibold">{data.name}</p>
@@ -119,13 +117,13 @@ export default function Admin() {
           <p className="font-bold text-xl self-start mt-4">
             Ticket Manager List
           </p>
-          <div className="flex flex-row w-full h-64 py-4 overflow-x-scroll">
+          <div className="flex flex-row w-full h-64 py-4 overflow-x-scroll scrollbar-hide">
             {managerList.map((data) => (
               <div
                 key={data.wallet}
                 className="flex flex-col bg-gray-50 rounded-xl p-3 drop-shadow-md min-w-[10rem] h-full mx-3"
               >
-                <div className="h-[75%] overflow-scroll whitespace-break-spaces">
+                <div className="h-[75%] overflow-scroll scrollbar-hide whitespace-break-spaces">
                   <div className="flex flex-col items-center mb-2">
                     <p className="text-xs">Name</p>
                     <p className="text-sm font-semibold">{data.name}</p>
