@@ -90,10 +90,11 @@ export default function MyPage() {
             <p className="font-bold text-xl">{elem.name}</p>
 
             <ol className=" list-disc">
+              <li>contract address: {elem.addr}</li>
+              <li>token id: {elem.tokenId}</li>
               <li>
                 date/time: {elem.date} {elem.time}
               </li>
-              <li>token id: {elem.tokenId}</li>
             </ol>
           </div>
         ))

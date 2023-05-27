@@ -21,7 +21,10 @@ export default function Home() {
   // Get whole concert info
   const getConcertInfo = async () => {
     // if (!isConnected) return;
-    await wGetAllConcertInfo().then(async (res) => setEventList(res));
+    await wGetAllConcertInfo().then(async (res) => {
+      const filtered = res.filter((d) => d.category == category);
+      setEventList(filtered);
+    });
   };
 
   useEffect(() => {

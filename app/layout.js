@@ -7,6 +7,7 @@ import {
 } from "@web3modal/ethereum";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { mainnet, sepolia } from "wagmi/chains";
+import { useAccount } from "wagmi";
 import { Web3Modal } from "@web3modal/react";
 
 import Header from "./Header";
@@ -33,12 +34,25 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const { isConnected } = useAccount();
   return (
     <html lang="en">
       <body className="flex min-h-screen h-full flex-col items-center self-center font-notoSans pb-14">
         <WagmiConfig config={wagmiConfig}>
           <Header />
           <div className="border-b-2 border-gray-200 w-full"></div>
+          {/* TODO. 밑에 에러 수정 */}
+          {/* {isConnected ? (
+            children
+          ) : (
+            <div className="flex items-center h-96">
+              <p className=" text-center text-xl font-bold text-gray-300">
+                Please connect your wallet
+                <br />
+                using the top button &apos;Connect Wallet&apos;
+              </p>
+            </div>
+          )} */}
           {children}
         </WagmiConfig>
         <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
