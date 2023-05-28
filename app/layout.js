@@ -56,7 +56,7 @@ export default function RootLayout({ children }) {
         <WagmiConfig config={wagmiConfig}>
           <Header />
           <div className="border-b-2 border-gray-200 w-full"></div>
-          {element}
+          {children}
         </WagmiConfig>
         <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
       </body>

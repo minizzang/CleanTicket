@@ -1,17 +1,9 @@
-"use client";
-
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Web3Button } from "@web3modal/react";
-import { useEffect, useState } from "react";
 
 export default function Header() {
   const router = useRouter();
-  const [dummy, setDummy] = useState(false);
-
-  useEffect(() => {
-    setDummy(true);
-  }, []);
 
   return (
     <div className="max-w-6xl w-full flex items-center p-8">
