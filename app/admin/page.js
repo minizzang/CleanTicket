@@ -9,12 +9,22 @@ import {
 } from "../../lib/TicketNFTFactory";
 
 export default function Admin() {
-  const { isConnected, address } = useAccount(); // TODO. 관리자 wallet이면 OK하는 로직
+  const { isConnected, address } = useAccount();
 
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [waitingList, setWatingList] = useState([]);
   const [managerList, setManagerList] = useState([]);
   const [changed, setChanged] = useState(false);
+  const adminWallet = [
+    "0x9f4676df065cc76159900752Ba19a35dB4d3f883",
+    "0xC9770CbbF71F792c661FF82bbc034d00B4700e6F",
+  ];
+
+  useEffect(() => {
+    if (adminWallet.includes(address)) {
+      setIsAdmin(true);
+    }
+  }, []);
 
   // Get all manager list from DB (waiting & accepted)
   const getManagerList = async () => {
@@ -153,7 +163,11 @@ export default function Admin() {
           </div>
         </>
       ) : (
-        <></>
+        <div className="flex items-center h-96">
+          <p className=" text-center text-xl font-bold text-gray-300">
+            Only admin can access this page
+          </p>
+        </div>
       )}
     </div>
   );
