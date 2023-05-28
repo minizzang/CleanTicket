@@ -96,8 +96,18 @@ export default function MyPage() {
             >
               <p className="font-bold text-xl mb-2">{elem.name}</p>
 
-              <ol className=" list-disc">
-                <li>contract address: {elem.addr}</li>
+              <ol className="list-disc">
+                <li>
+                  <div className="flex flex-row">
+                    <p>contract address:&nbsp;</p>
+                    <p
+                      onClick={() => navigator.clipboard.writeText(elem.addr)}
+                      className="hover:text-dark-purple hover:cursor-pointer"
+                    >
+                      {elem.addr}
+                    </p>
+                  </div>
+                </li>
                 <li>token id: {elem.tokenId}</li>
                 <li>
                   date/time: {elem.date} {elem.time}
