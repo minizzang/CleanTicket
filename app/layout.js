@@ -31,24 +31,6 @@ const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
 export default function RootLayout({ children }) {
   const { isConnected } = useAccount();
-  const [element, setElement] = useState(<></>);
-
-  useEffect(() => {
-    if (isConnected) {
-      setElement(children);
-    } else {
-      const elem = (
-        <div className="flex items-center h-96">
-          <p className=" text-center text-xl font-bold text-gray-300">
-            Please connect your wallet
-            <br />
-            using the top button &apos;Connect Wallet&apos;
-          </p>
-        </div>
-      );
-      setElement(elem);
-    }
-  }, [isConnected]);
 
   return (
     <html lang="en">

@@ -14,14 +14,12 @@ export default function Header() {
         alt="clean ticket"
         className="mr-12 cursor-pointer"
         onClick={() => {
-          console.log("click logo");
           router.push("/");
         }}
       />
       <div className="flex text-base font-medium">
         <button
           onClick={() => {
-            console.log("click about");
             router.push("/about");
           }}
           className="mr-8"
@@ -30,7 +28,6 @@ export default function Header() {
         </button>
         <button
           onClick={() => {
-            console.log("click register");
             router.push("/register");
           }}
           className="mr-8"
@@ -39,7 +36,6 @@ export default function Header() {
         </button>
         <button
           onClick={() => {
-            console.log("click mypage");
             router.push("/mypage");
           }}
           className="mr-8"
