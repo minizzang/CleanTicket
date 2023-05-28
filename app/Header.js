@@ -19,15 +19,18 @@ export default function Header() {
         onClick={() => router.push("/")}
       />
       <div className="flex text-base font-medium">
-        <Link href="/about">
+        <div onClick={() => router.push("/about")} className="cursor-pointer">
           <p className="mr-8">About</p>
-        </Link>
-        <Link href="/register">
+        </div>
+        <div
+          onClick={() => router.push("/register")}
+          className="cursor-pointer"
+        >
           <p className="mr-8">Register</p>
-        </Link>
-        <Link href="/mypage">
+        </div>
+        <div onClick={() => router.push("/mypage")} className="cursor-pointer">
           <p className="mr-8">MyPage</p>
-        </Link>
+        </div>
       </div>
       <Web3Button />
     </div>
