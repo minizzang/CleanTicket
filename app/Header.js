@@ -1,9 +1,17 @@
+"use client";
+
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Web3Button } from "@web3modal/react";
+import { useEffect, useState } from "react";
 
 export default function Header() {
   const router = useRouter();
+  const [dummy, setDummy] = useState(false);
+
+  useEffect(() => {
+    setDummy(true);
+  }, []);
 
   return (
     <div className="max-w-6xl w-full flex items-center p-8">
@@ -13,21 +21,39 @@ export default function Header() {
         height={100}
         alt="clean ticket"
         className="mr-12 cursor-pointer"
-        onClick={() => router.push("/")}
+        onClick={() => {
+          console.log("click logo");
+          router.push("/");
+        }}
       />
       <div className="flex text-base font-medium">
-        <div onClick={() => router.push("/about")} className="cursor-pointer">
-          <p className="mr-8">About</p>
-        </div>
-        <div
-          onClick={() => router.push("/register")}
-          className="cursor-pointer"
+        <button
+          onClick={() => {
+            console.log("click about");
+            router.push("/about");
+          }}
+          className="mr-8"
         >
-          <p className="mr-8">Register</p>
-        </div>
-        <div onClick={() => router.push("/mypage")} className="cursor-pointer">
-          <p className="mr-8">MyPage</p>
-        </div>
+          About
+        </button>
+        <button
+          onClick={() => {
+            console.log("click register");
+            router.push("/register");
+          }}
+          className="mr-8"
+        >
+          Register
+        </button>
+        <button
+          onClick={() => {
+            console.log("click mypage");
+            router.push("/mypage");
+          }}
+          className="mr-8"
+        >
+          MyPage
+        </button>
       </div>
       <Web3Button />
     </div>
