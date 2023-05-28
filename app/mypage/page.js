@@ -66,7 +66,7 @@ export default function MyPage() {
                 <li>
                   date/time: {elem.date} {elem.time}
                 </li>
-                <li>concert price: {elem.price}eth</li>
+                <li>concert price: {elem.price / 1000}eth</li>
                 <li>
                   remaining tickets: {elem.maxTicketCount - elem.soldCount}/
                   {elem.maxTicketCount}

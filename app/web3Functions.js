@@ -48,12 +48,11 @@ export async function wGetMyTickets(userAddr) {
         await readContract({
           address: data.addr,
           abi: TicketNFTAbi,
-          functionName: "balanceOf",
-          args: [userAddr],
-        }).then((token) => {
-          let tokenId = token.toString();
-          if (tokenId != 0) {
-            myTickets.push({ tokenId, ...data });
+          functionName: "getUserInfo",
+        }).then((list) => {
+          let idx = list.indexOf(userAddr);
+          if (idx != -1) {
+            myTickets.push({ tokenId: idx + 1, ...data });
           }
         })
     )
